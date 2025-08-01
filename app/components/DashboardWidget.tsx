@@ -6,18 +6,28 @@ import { saveAs } from "file-saver";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 
-const generateDummyData = () => {
+// ✅ Define type for campaign items
+type Campaign = {
+  id: number;
+  name: string;
+  impressions: number;
+  clicks: number;
+  date: string;
+};
+
+// ✅ Dummy data generator
+const generateDummyData = (): Campaign[] => {
   return Array.from({ length: 5 }, (_, i) => ({
     id: i + 1,
     name: `Campaign ${i + 1}`,
     impressions: Math.floor(Math.random() * 10000),
     clicks: Math.floor(Math.random() * 1000),
-    date: format(new Date(Date.now() - i * 86400000), "yyyy-MM-dd"),
+    date: format(new Date(Date.now() - i * 86400000), "yyyy-MM-dd"), // last 5 days
   }));
 };
 
 const DashboardWidget = () => {
-  const [data, setData] = useState([]);
+  const [data, setData] = useState<Campaign[]>([]);
   const [loading, setLoading] = useState(true);
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
@@ -62,7 +72,9 @@ const DashboardWidget = () => {
     printWindow.document.write("<h2>Campaign Data</h2>");
     printWindow.document.write("<table border='1' cellpadding='4'><tr><th>ID</th><th>Name</th><th>Impressions</th><th>Clicks</th><th>Date</th></tr>");
     filteredData.forEach((item) => {
-      printWindow?.document.write(`<tr><td>${item.id}</td><td>${item.name}</td><td>${item.impressions}</td><td>${item.clicks}</td><td>${item.date}</td></tr>`);
+      printWindow?.document.write(
+        `<tr><td>${item.id}</td><td>${item.name}</td><td>${item.impressions}</td><td>${item.clicks}</td><td>${item.date}</td></tr>`
+      );
     });
     printWindow.document.write("</table></body></html>");
     printWindow.document.close();
